@@ -29,7 +29,7 @@ func (p *Packet) SetIsQuery() {
 }
 
 func (p *Packet) SetIsResponse() {
-	(*p)[2] &= 0b01111111
+	(*p)[2] &= 0b11111110
 }
 
 func (p *Packet) Opcode() byte {
