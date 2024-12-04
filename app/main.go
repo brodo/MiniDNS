@@ -38,11 +38,10 @@ func main() {
 
 		receivedData := string(buf[:size])
 		fmt.Printf("Received %d bytes from %s: %s\n", size, source, receivedData)
+		packet := Packet(receivedData)
+		packet.SetIsResponse()
 
-		// Create an empty response
-		response := []byte{}
-
-		_, err = udpConn.WriteToUDP(response, source)
+		_, err = udpConn.WriteToUDP(packet, source)
 		if err != nil {
 			fmt.Println("Failed to send response:", err)
 		}
