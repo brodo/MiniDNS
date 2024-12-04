@@ -21,15 +21,15 @@ func (p *Packet) SetId(id uint16) {
 }
 
 func (p *Packet) IsQuery() bool {
-	return ((*p)[2] & 0b10000000) != 0
-}
-
-func (p *Packet) SetIsQuery() {
-	(*p)[2] |= 0b10000000
+	return ((*p)[2] & 0b10000000) == 0
 }
 
 func (p *Packet) SetIsResponse() {
-	(*p)[2] &= 0b11111110
+	(*p)[2] |= 0b10000000
+}
+
+func (p *Packet) SetIsQuery() {
+	(*p)[2] &= 0b01111111
 }
 
 func (p *Packet) Opcode() byte {
