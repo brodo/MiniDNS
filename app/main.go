@@ -2,15 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net"
 )
 
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Println("Logs from your program will appear here!")
-
-	// Uncomment this block to pass the first stage
-	//
 	udpAddr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2053")
 	if err != nil {
 		fmt.Println("Failed to resolve UDP address:", err)
@@ -29,19 +25,19 @@ func main() {
 	for {
 		size, source, err := udpConn.ReadFromUDP(buf)
 		if err != nil {
-			fmt.Println("Error receiving data:", err)
+			slog.Error("Error receiving data", "error", err)
 			break
 		}
-
-		receivedData := string(buf[:size])
-		fmt.Printf("Received %d bytes from %s: %s\n", size, source, receivedData)
 		packet := Packet(buf[:size])
+		slog.Info("Received message", "size", size, "source", source, "packet", packet.String())
+		questions := packet.Questions()
+		slog.Info("Question section", "questions", questions)
 		packet.SetIsResponse()
-		fmt.Printf("Sending response: %s\n", string(packet))
+		slog.Info("Sending response", "response", string(packet))
 
 		_, err = udpConn.WriteToUDP(packet, source)
 		if err != nil {
-			fmt.Println("Failed to send response:", err)
+			slog.Info("Failed to send response", "error", err)
 		}
 	}
 }
