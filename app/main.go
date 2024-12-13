@@ -30,10 +30,28 @@ func main() {
 		}
 		packet := Packet(buf[:size])
 		slog.Info("Received message", "size", size, "source", source, "packet", packet.String())
-		questions := packet.Questions()
+		questions, n := packet.Questions()
 		slog.Info("Question section", "questions", questions)
 		packet.SetIsResponse()
+
+		answers := make([]Answer, 0)
+
+		for _, q := range questions {
+			answer := Answer{
+				Name: q.Labels,
+				Type: q.RecordType,
+				TTL:  60,
+				Data: []byte{1, 2, 3, 4},
+			}
+			answers = append(answers, answer)
+		}
+		err = packet.SetAnswers(answers, n)
+		if err != nil {
+			slog.Info("Failed to set answers", "error", err)
+		}
+
 		slog.Info("Sending response", "response", string(packet))
+		slog.Info("Sending message", "response", packet.String())
 
 		_, err = udpConn.WriteToUDP(packet, source)
 		if err != nil {
