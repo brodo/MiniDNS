@@ -34,6 +34,10 @@ func main() {
 		slog.Info("Question section", "questions", questions)
 		packet.SetIsResponse()
 
+		if packet.Opcode() != 0 {
+			packet.SetResponseCode(4)
+		}
+
 		answers := make([]Answer, 0)
 
 		for _, q := range questions {

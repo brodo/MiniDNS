@@ -145,6 +145,10 @@ func (p *Packet) ResponseCode() byte {
 	return (*p)[3] & 0b00001111
 }
 
+func (p *Packet) SetResponseCode(code byte) {
+	(*p)[3] = code
+}
+
 func (p *Packet) QuestionCount() uint16 {
 	return binary.BigEndian.Uint16((*p)[4:6])
 }
