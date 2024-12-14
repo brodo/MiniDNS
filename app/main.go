@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	// todo: port can be set as a command line parameter
+
 	udpAddr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2053")
 	if err != nil {
 		fmt.Println("Failed to resolve UDP address:", err)

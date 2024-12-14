@@ -182,12 +182,22 @@ func (p *Packet) Questions() ([]Question, int) {
 	pos := 12
 	for i := uint16(0); i < p.QuestionCount(); i++ {
 		labels := make([]string, 0)
+		oldPos := -1
 		for (*p)[pos] != 0 {
+			if (*p)[pos]&0b11000000 == 0b11000000 { // this is a compressed label
+				offset := (uint16((*p)[pos]&0b00111111) << 8) | uint16((*p)[pos+1])
+				oldPos = pos + 2
+				pos = int(offset)
+			}
 			labelLen := int((*p)[pos])
 			pos++
 			labels = append(labels, string((*p)[pos:pos+labelLen]))
 			pos += labelLen
+			if oldPos != -1 {
+				pos = oldPos
+			}
 		}
+
 		pos++
 		t := binary.BigEndian.Uint16((*p)[pos : pos+2])
 		pos += 4
