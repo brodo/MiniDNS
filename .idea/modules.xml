@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Zig.iml" filepath="$PROJECT_DIR$/Zig.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/codecrafters-dns-server-go.iml" filepath="$PROJECT_DIR$/.idea/codecrafters-dns-server-go.iml" />
     </modules>
   </component>
